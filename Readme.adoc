@@ -1,8 +1,12 @@
 ==== Run Ansible Homework Assignment and grade
-At first update GUIDs to the one provisioned: #
-* 5922 - GUID PROD_ANS_TOWER_HOMEWORK_LAB #
-* 5a87 - GUID Ansible_Advance_OSP_ENV_v5.6-i-8ccc #
-* e6ed - GUID PROD_THREE_TIER_APP (update GUID after 3TierApp environment will be provisioned) #
+
+At first update GUIDs to the one provisioned: 
+
+5922 - GUID PROD_ANS_TOWER_HOMEWORK_LAB
+
+5a87 - GUID Ansible_Advance_OSP_ENV_v5.6-i-8ccc
+
+e6ed - GUID PROD_THREE_TIER_APP (update GUID after 3TierApp environment will be provisioned) #
 
 [source,text]
 ----
