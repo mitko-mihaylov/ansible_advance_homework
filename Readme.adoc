@@ -1,23 +1,56 @@
-==== Ansible Tower Config
-
-
-* From the cloned repo run `site-config-tower.yml` playbook to create job templates and workflow template.
+==== Run Ansible Homework Assignment and grade
+Updates GUIDs to the one provisioned
+5922 - GUID PROD_ANS_TOWER_HOMEWORK_LAB
+5a87 - GUID Ansible_Advance_OSP_ENV_v5.6-i-8ccc 
+e6ed - GUID PROD_THREE_TIER_APP (update GUID after 3TierApp environment will be provisioned)
 
 [source,text]
 ----
-[bastion]$ sudo -i
-[bastion]# cd ansible_advance_homework
-[bastion]# TOWER_GUID=<Ansible Tower Homework GUID from mail>
-[bastion]# OSP_GUID=<Openstack for Ansible GUID from mail>
-[bastion]# OPENTLC_LOGIN=<username-company.com>
-[bastion]# OPENTLC_PASSWORD=<your openlc account password>
-[bastion]# GITHUB_REPO=https://github.com/<githubhandler>/ansible_advance_homework
-[bastion]# JQ_REPO_BASE=http://www.opentlc.com/download/ansible_bootcamp
-[bastion]# REGION=<enter region name example us-east-1>
-[bastion]# RH_MAIL_ID=<your mail id for dynamic inventory tag>
-[bastion]# ansible-playbook site-config-tower.yml -e tower_GUID=${TOWER_GUID} -e osp_GUID=${OSP_GUID} -e opentlc_login=${OPENTLC_LOGIN} -e path_to_opentlc_key=/root/.ssh/mykey.pem -e param_repo_base=${JQ_REPO_BASE} -e opentlc_password=${OPENTLC_PASSWORD} -e REGION_NAME=${REGION} -e EMAIL=${RH_MAIL_ID} -e github_repo=${GITHUB_REPO}
-----
+# Ansible tower node:
+https://tower1.5922.example.opentlc.com
+admin
+r3dh4t1!
 
+#bastion host to connect using ssh key (.ppk file in putty)
+marcin.gala-atos.net@bastion.5922.example.opentlc.com
+
+#copy private key to access workstation and configure necessary permissions to access that key
+sudo -i
+vim /root/.ssh/mykey.pem
+chmod 400 /root/.ssh/mykey.pem
+chown root:root /root/.ssh/mykey.pem
+
+# remove hashed lines from openstack public certificate
+sed -i '/^#/ d'  /root/.ssh/openstack.pem
+
+#verify that it is possible to connect to OSP workstation
+ssh -i /root/.ssh/mykey.pem marcin.gala-atos.net@workstation-5a87.rhpds.opentlc.com
+
+#clone github repo
+git clone https://github.com/marcin-gala/ansible_advance_homework.git
+
+cd ansible_advance_homework
+OSP_GUID=5a87
+ansible-playbook site-setup-workstation.yml -e OSP_GUID=${OSP_GUID} --private-key=/root/.ssh/mykey.pem -u marcin.gala-atos.net
+
+TOWER_GUID=5922
+OSP_GUID=5a87
+OPENTLC_LOGIN=marcin.gala-atos.net
+OPENTLC_PASSWORD=password
+GITHUB_REPO=https://github.com/marcin-gala/ansible_advance_homework.git
+JQ_REPO_BASE=http://www.opentlc.com/download/ansible_bootcamp
+REGION=us-east-1
+RH_MAIL_ID=marcin.gala@atos.net
+
+ansible-playbook site-install-isolated-node.yml -e TOWER_GUID=${TOWER_GUID} -e OSP_GUID=${OSP_GUID} -e opentlc_login=${OPENTLC_LOGIN} -e path_to_opentlc_key=/root/.ssh/mykey.pem -e param_repo_base=${JQ_REPO_BASE} -e opentlc_password=${OPENTLC_PASSWORD} -e REGION_NAME=${REGION} -e EMAIL=${RH_MAIL_ID} -e github_repo=${GITHUB_REPO}
+
+ansible-playbook site-config-tower.yml -e tower_GUID=${TOWER_GUID} -e osp_GUID=${OSP_GUID} -e opentlc_login=${OPENTLC_LOGIN} -e path_to_opentlc_key=/root/.ssh/mykey.pem -e param_repo_base=${JQ_REPO_BASE} -e opentlc_password=${OPENTLC_PASSWORD} -e REGION_NAME=${REGION} -e EMAIL=${RH_MAIL_ID} -e github_repo=${GITHUB_REPO}
+
+# grading
+OSP_GUID=5a87
+ANSIBLE_ADVANCE_GUID=e6ed
+ansible-playbook grading-script.yml -e OSP_GUID=${OSP_GUID} -e ANSIBLE_ADVANCE_GUID=${ANSIBLE_ADVANCE_GUID}
+----
 
 .List of Playbooks
 [%header,cols=2*]
