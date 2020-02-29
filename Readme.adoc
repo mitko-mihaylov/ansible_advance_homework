@@ -1,22 +1,21 @@
 ==== Run Ansible Homework Assignment and grade
 
-At first update GUIDs to the one provisioned: 
+Run Ansible Homework Assignment and grade
+update GUIDs to the one provisioned:
 
-5922 - GUID PROD_ANS_TOWER_HOMEWORK_LAB
+66ac - GUID PROD_ANS_TOWER_HOMEWORK_LAB
 
-5a87 - GUID Ansible_Advance_OSP_ENV_v5.6-i-8ccc
+2237 - GUID Ansible_Advance_OSP_ENV_v5.6-i-8ccc
 
-e6ed - GUID PROD_THREE_TIER_APP (update GUID after 3TierApp environment will be provisioned) #
+32c6 - GUID PROD_THREE_TIER_APP (update GUID after 3TierApp environment will be provisioned) #
 
-[source,text]
-----
 # Ansible tower node:
-https://tower1.5922.example.opentlc.com
+https://tower1.66ac.example.opentlc.com
 admin
 r3dh4t1!
 
 #bastion host to connect using ssh key (.ppk file in putty)
-marcin.gala-atos.net@bastion.5922.example.opentlc.com
+mitko.mihaylov-atos.net@bastion.66ac.example.opentlc.com
 
 #copy private key to access workstation and configure necessary permissions to access that key
 sudo -i
@@ -26,33 +25,37 @@ chown root:root /root/.ssh/mykey.pem
 
 # remove hashed lines from openstack public certificate
 sed -i '/^#/ d'  /root/.ssh/openstack.pem
+# sed -i '/^#/ d'  /root/.ssh/openstack.pub
 
 #verify that it is possible to connect to OSP workstation
-ssh -i /root/.ssh/mykey.pem marcin.gala-atos.net@workstation-5a87.rhpds.opentlc.com
+ssh -i /root/.ssh/mykey.pem mitko.mihaylov-atos.net@workstation-2237.rhpds.opentlc.com
 
 #clone github repo
-git clone https://github.com/marcin-gala/ansible_advance_homework.git
+git clone https://github.com/mitko-mihaylov/ansible_advance_homework.git
 
 cd ansible_advance_homework
-OSP_GUID=5a87
-ansible-playbook site-setup-workstation.yml -e OSP_GUID=${OSP_GUID} --private-key=/root/.ssh/mykey.pem -u marcin.gala-atos.net
+OSP_GUID=2237
+ansible-playbook site-setup-workstation.yml -e OSP_GUID=${OSP_GUID} --private-key=/root/.ssh/mykey.pem -u mitko.mihaylov-atos.net
 
-TOWER_GUID=5922
-OSP_GUID=5a87
-OPENTLC_LOGIN=marcin.gala-atos.net
-OPENTLC_PASSWORD=password
-GITHUB_REPO=https://github.com/marcin-gala/ansible_advance_homework.git
+#verify that it is possible to connect to OSP workstation with cloud-user
+ssh -i /root/.ssh/openstack.pem cloud-user@workstation-2237.rhpds.opentlc.com
+
+TOWER_GUID=66ac
+OSP_GUID=2237
+OPENTLC_LOGIN=mitko.mihaylov-atos.net
+OPENTLC_PASSWORD=Ma313028*
+GITHUB_REPO=https://github.com/mitko-mihaylov/ansible_advance_homework.git
 JQ_REPO_BASE=http://www.opentlc.com/download/ansible_bootcamp
-REGION=us-east-1
-RH_MAIL_ID=marcin.gala@atos.net
+REGION=eu-central-1
+RH_MAIL_ID=mitko.mihaylov@atos.net
 
 ansible-playbook site-install-isolated-node.yml -e TOWER_GUID=${TOWER_GUID} -e OSP_GUID=${OSP_GUID} -e opentlc_login=${OPENTLC_LOGIN} -e path_to_opentlc_key=/root/.ssh/mykey.pem -e param_repo_base=${JQ_REPO_BASE} -e opentlc_password=${OPENTLC_PASSWORD} -e REGION_NAME=${REGION} -e EMAIL=${RH_MAIL_ID} -e github_repo=${GITHUB_REPO}
 
 ansible-playbook site-config-tower.yml -e tower_GUID=${TOWER_GUID} -e osp_GUID=${OSP_GUID} -e opentlc_login=${OPENTLC_LOGIN} -e path_to_opentlc_key=/root/.ssh/mykey.pem -e param_repo_base=${JQ_REPO_BASE} -e opentlc_password=${OPENTLC_PASSWORD} -e REGION_NAME=${REGION} -e EMAIL=${RH_MAIL_ID} -e github_repo=${GITHUB_REPO}
 
 # grading
-OSP_GUID=5a87
-ANSIBLE_ADVANCE_GUID=e6ed
+OSP_GUID=2237
+ANSIBLE_ADVANCE_GUID=32c6 
 ansible-playbook grading-script.yml -e OSP_GUID=${OSP_GUID} -e ANSIBLE_ADVANCE_GUID=${ANSIBLE_ADVANCE_GUID}
 ----
 
